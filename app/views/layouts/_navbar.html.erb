@@ -1,5 +1,15 @@
-<nav class="bg-slate-300">
-  <div class="h-16 flex items-center ml-4">
-    <%= link_to "Blog App", root_path, class: 'font-bold text-2xl subpixel-antialiased tracking-wider text-blue-500' %>
+<nav class="bg-slate-300 w-screen flex">
+  <div class="h-16 flex items-center justify-around w-full ml-4">
+    <div>
+      <%= link_to "Blog App", root_path, class: 'font-bold text-2xl subpixel-antialiased tracking-wider text-blue-500' %>
+    </div>
+    <div>
+    <% if user_signed_in? %>
+      <%= button_to 'Logout', destroy_user_session_path, method: :delete, class: 'btn btn-danger' %>
+    <% else %>
+      <%= link_to 'Log in', new_user_session_path, class: 'btn btn-primary' %>
+    <% end %>
+    </div>
   </div>
+  
 </nav>

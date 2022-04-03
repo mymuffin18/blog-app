@@ -71,6 +71,8 @@ group :test do
   gem "webdrivers"
 end
 
+gem 'devise'
 gem "tailwindcss-rails", "~> 2.0"
-
+gem 'dotenv-rails'
 gem 'rubocop-rails', require: false
+gem "aws-sdk-s3", require: false

@@ -3,27 +3,33 @@
     <%= link_to "< Back", :back, class: 'self-end text-gray-500 text-lg mr-5' %>
     <div class='my-2 w-full'>
       <h1 class='text-4xl font-bold text-center'><%= @article.title %></h1>
+      <% if @article.article_image.attached? %>
+      <div class="flex justify-center w-full">
+        <%= image_tag @article.article_image, class: 'w-1/2', style: 'height: 400px'  %>
+      </div>
+      <% end %>
       <p class='text-justify mx-2'><%= @article.body %></p>
     </div>
-    <div class="flex gap-2 mb-4">
-      <%= link_to "Edit article", edit_article_path(@article), class: 'btn btn-edit' %>
-      <%= link_to "Destroy", article_path(@article), data: {
-                    turbo_method: :delete,
-                    turbo_confirm: "Are you sure?"
-                  }, class: 'btn btn-danger' %>
-    </div>
-
+    <% if user_signed_in? %>
+    <% if @article.user.id == current_user.id %>
+      
+      <div class="flex gap-2 mb-4">
+        <%= link_to "Edit article", edit_article_path(@article), class: 'btn btn-edit' %>
+        <%= link_to "Destroy", article_path(@article), data: {
+                      turbo_method: :delete,
+                      turbo_confirm: "Are you sure?"
+                    }, class: 'btn btn-danger' %>
+      </div> 
+    <% end %>
+      
+    <% end %>
+    
+      
     <div class='flex flex-col w-1/2'>
+    <% if user_signed_in? %>
       <h1>Add a comment:</h1>
       <div>
         <%= form_with model: [@article, @article.comments.build ] do |form| %>
-                <div class="mb-2">
-                    <%= form.label :name, class: "block" %>
-                    <%= form.text_field :name, class: "w-full" %>
-                    <% @article.errors.full_messages_for(:name).each do |message| %>
-                    <div class="text-sm text-red-400"><%= message %></div>
-                    <% end %>
-                </div>
                 <div class="mb-2">
                     <%= form.label :body, class: "block" %>
                     <%= form.text_area :body, class: "w-full resize-none" %>
@@ -37,9 +43,12 @@
         <% end %>
 
         </div>
+    <% end %>
         <div>
           <h1 class='text-lg'>Comments:</h1>
+          <div class="flex flex-col gap-2 mb-4">
           <%= render @article.comments %>
+          </div>
         </div>
     </div>
   </div>

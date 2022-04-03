@@ -1,5 +1,11 @@
-<% unless comment == nil %>
-<p><%= comment.name %></p>
+
+<% if comment.body %>
+<div class='border-2 w-full'>
+<div class='flex flex-col items-start mx-2'>
+<p>Name: <%= comment.name %></p>
 <p><%= comment.body %></p>
+</div>
+</div>
   
 <% end %>
+  

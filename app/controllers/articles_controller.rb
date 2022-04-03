@@ -1,6 +1,8 @@
 class ArticlesController < ApplicationController
+  before_action :authenticate_user!, except: %i[index show]
+
   def index
-    @articles = Article.order('id desc')
+    @articles = Article.includes(:user).order('id desc')
   end
 
   def show
@@ -10,16 +12,16 @@ class ArticlesController < ApplicationController
   end
 
   def new
-    @article = Article.new
+    @article = current_user.articles.build
   end
 
   def create
-    @article = Article.new(article_params)
+    @article = current_user.articles.build(article_params)
     if @article.save
-      flash[:success] = 'Article successfully created'
+      flash[:notice] = 'Article successfully created'
       redirect_to articles_path
     else
-      flash[:error] = 'Something went wrong'
+      flash[:alert] = 'Error processing your data'
       render :new, status: :unprocessable_entity
     end
   end
@@ -31,10 +33,10 @@ class ArticlesController < ApplicationController
   def update
     @article = Article.find(params[:id])
     if @article.update(article_params)
-      flash[:success] = 'Object was successfully updated'
+      flash[:notice] = 'Article was successfully updated'
       redirect_to @article
     else
-      flash[:error] = 'Something went wrong'
+      flash[:alert] = 'Something went wrong'
       render :edit, status: :unprocessable_entity
     end
   end
@@ -43,13 +45,13 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
     @article.destroy
 
-    flash[:success] = 'Article Deleted'
+    flash[:notice] = 'Article Deleted'
     redirect_to articles_path, status: :see_other
   end
 
   private
 
   def article_params
-    params.require(:article).permit(:title, :body)
+    params.require(:article).permit(:title, :body, :article_image)
   end
 end
